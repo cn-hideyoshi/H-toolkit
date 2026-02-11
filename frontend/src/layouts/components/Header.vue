@@ -138,7 +138,7 @@ const handleNav = (url) => {
 }
 
 const navToGitHub = () => {
-  window.open('https://github.com/cn-hideyoshi/h-toolkit')
+  window.open('https://github.com/cn-hideyoshi/H-toolkit')
 }
 const isMax = ref(false)
 
