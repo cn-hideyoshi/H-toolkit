@@ -1,5 +1,5 @@
-﻿<template>
-  <div :class="layoutCls">
+<template>
+  <div :class="layoutCls" @dblclick="onHeaderDblClick">
     <t-head-menu :class="menuCls" :theme="theme" expand-type="popup" :value="active">
       <template #logo>
         <span v-if="showLogo" class="header-logo-container" @click="handleNav('/dashboard/base')">
@@ -101,6 +101,16 @@ const toggleSettingPanel = () => {
   })
 }
 
+const onHeaderDblClick = async (e: MouseEvent) => {
+  const el = e.target as HTMLElement
+
+  // 在这些元素上双击，不触发最大化（避免误触）
+  if (el.closest('button, a, input, textarea, [role="button"], .window-controls, .t-popup__reference')) return
+
+  await WindowToggleMaximise()
+  await syncWindowMaximised()
+}
+
 const active = computed(() => getActive())
 
 const layoutCls = computed(() => [`${prefix}-header-layout`])
@@ -157,6 +167,7 @@ onBeforeUnmount(() => {
 <style lang="less" scoped>
 .@{starter-prefix}-header-layout {
   --wails-draggable: drag;
+  user-select: none;
 }
 
 .window-controls {
