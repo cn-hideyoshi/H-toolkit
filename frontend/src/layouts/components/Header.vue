@@ -1,21 +1,12 @@
-<template>
+﻿<template>
   <div :class="layoutCls">
     <t-head-menu :class="menuCls" :theme="theme" expand-type="popup" :value="active">
       <template #logo>
-        <span
-          v-if="showLogo"
-          class="header-logo-container"
-          @click="handleNav('/dashboard/base')"
-        >
+        <span v-if="showLogo" class="header-logo-container" @click="handleNav('/dashboard/base')">
           <logo-full class="t-logo" />
         </span>
         <div v-else class="header-operate-left">
-          <t-button
-            theme="default"
-            shape="square"
-            variant="text"
-            @click="changeCollapsed"
-          >
+          <t-button theme="default" shape="square" variant="text" @click="changeCollapsed">
             <t-icon class="collapsed-icon" name="view-list" />
           </t-button>
           <search :layout="layout" />
@@ -29,54 +20,27 @@
           <!-- 搜索框 -->
           <search v-if="layout !== 'side'" :layout="layout" />
 
-          <!-- 全局通知 -->
-          <notice />
-
           <t-tooltip placement="bottom" content="代码仓库">
             <t-button theme="default" shape="square" variant="text" @click="navToGitHub">
               <t-icon name="logo-github" />
             </t-button>
           </t-tooltip>
-          <t-tooltip placement="bottom" content="帮助文档">
-            <t-button theme="default" shape="square" variant="text" @click="navToHelper">
-              <t-icon name="help-circle" />
-            </t-button>
-          </t-tooltip>
-          <t-dropdown :min-column-width="135" trigger="click">
-            <template #dropdown>
-              <t-dropdown-menu>
-                <t-dropdown-item
-                  class="operations-dropdown-container-item"
-                  @click="handleNav('/user/index')"
-                >
-                  <t-icon name="user-circle"></t-icon>个人中心
-                </t-dropdown-item>
-                <t-dropdown-item
-                  class="operations-dropdown-container-item"
-                  @click="handleLogout"
-                >
-                  <t-icon name="poweroff"></t-icon>退出登录
-                </t-dropdown-item>
-              </t-dropdown-menu>
-            </template>
-            <t-button class="header-user-btn" theme="default" variant="text">
-              <template #icon>
-                <t-icon class="header-user-avatar" name="user-circle" />
-              </template>
-              <div class="header-user-account">Tencent</div>
-              <template #suffix><t-icon name="chevron-down" /></template>
-            </t-button>
-          </t-dropdown>
           <t-tooltip placement="bottom" content="系统设置">
-            <t-button
-              theme="default"
-              shape="square"
-              variant="text"
-              @click="toggleSettingPanel"
-            >
+            <t-button theme="default" shape="square" variant="text" @click="toggleSettingPanel">
               <t-icon name="setting" />
             </t-button>
           </t-tooltip>
+          <div class="window-controls">
+            <t-button theme="default" shape="square" variant="text" @click="WindowMinimise">
+              <t-icon name="remove" />
+            </t-button>
+            <t-button theme="default" shape="square" variant="text" @click="handleToggleMaximise">
+              <t-icon :name="isMax ? 'fullscreen-exit' : 'fullscreen'" />
+            </t-button>
+            <t-button theme="default" shape="square" variant="text" @click="Quit">
+              <t-icon name="close" />
+            </t-button>
+          </div>
         </div>
       </template>
     </t-head-menu>
@@ -84,27 +48,27 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
-import type { PropType } from "vue";
-import { useRouter } from "vue-router";
-import { useSettingStore } from "@/store";
-import { getActive } from "@/router";
-import { prefix } from "@/config/global";
-import LogoFull from "@/assets/assets-logo-full.svg?component";
-import type { MenuRoute } from "@/types/interface";
+import { WindowIsMaximised, WindowMinimise, WindowToggleMaximise, Quit } from '../../../wailsjs/runtime/runtime'
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
+import type { PropType } from 'vue'
+import { useRouter } from 'vue-router'
+import { useSettingStore } from '@/store'
+import { getActive } from '@/router'
+import { prefix } from '@/config/global'
+import LogoFull from '@/assets/assets-logo-full.svg?component'
+import type { MenuRoute } from '@/types/interface'
 
-import Notice from "./Notice.vue";
-import Search from "./Search.vue";
-import MenuContent from "./MenuContent.vue";
+import Search from './Search.vue'
+import MenuContent from './MenuContent.vue'
 
 const props = defineProps({
   theme: {
     type: String as () => 'light' | 'dark',
-    default: "light",
+    default: 'light',
   },
   layout: {
     type: String,
-    default: "top",
+    default: 'top',
   },
   showLogo: {
     type: Boolean,
@@ -126,60 +90,81 @@ const props = defineProps({
     type: Number,
     default: 3,
   },
-});
+})
 
-const router = useRouter();
-const settingStore = useSettingStore();
+const router = useRouter()
+const settingStore = useSettingStore()
 
 const toggleSettingPanel = () => {
   settingStore.updateConfig({
     showSettingPanel: true,
-  });
-};
+  })
+}
 
-const active = computed(() => getActive());
+const active = computed(() => getActive())
 
-const layoutCls = computed(() => [`${prefix}-header-layout`]);
+const layoutCls = computed(() => [`${prefix}-header-layout`])
 
 const menuCls = computed(() => {
-  const { isFixed, layout, isCompact } = props;
+  const { isFixed, layout, isCompact } = props
   return [
     {
       [`${prefix}-header-menu`]: !isFixed,
       [`${prefix}-header-menu-fixed`]: isFixed,
-      [`${prefix}-header-menu-fixed-side`]: layout === "side" && isFixed,
-      [`${prefix}-header-menu-fixed-side-compact`]:
-        layout === "side" && isFixed && isCompact,
+      [`${prefix}-header-menu-fixed-side`]: layout === 'side' && isFixed,
+      [`${prefix}-header-menu-fixed-side-compact`]: layout === 'side' && isFixed && isCompact,
     },
-  ];
-});
+  ]
+})
 
 const changeCollapsed = () => {
   settingStore.updateConfig({
     isSidebarCompact: !settingStore.isSidebarCompact,
-  });
-};
+  })
+}
 
 const handleNav = (url) => {
-  router.push(url);
-};
-
-const handleLogout = () => {
-  router.push({
-    path: "/login",
-    query: { redirect: encodeURIComponent(router.currentRoute.value.fullPath) },
-  });
-};
+  router.push(url)
+}
 
 const navToGitHub = () => {
-  window.open("https://github.com/tencent/tdesign-vue-next-starter");
-};
+  window.open('https://github.com/cn-hideyoshi/h-toolkit')
+}
+const isMax = ref(false)
 
-const navToHelper = () => {
-  window.open("http://tdesign.tencent.com/starter/docs/get-started");
-};
+const syncWindowMaximised = async () => {
+  isMax.value = await WindowIsMaximised()
+}
+
+const handleToggleMaximise = async () => {
+  WindowToggleMaximise()
+  await syncWindowMaximised()
+}
+
+const handleWindowResize = () => {
+  void syncWindowMaximised()
+}
+
+onMounted(() => {
+  void syncWindowMaximised()
+  window.addEventListener('resize', handleWindowResize)
+})
+
+onBeforeUnmount(() => {
+  window.removeEventListener('resize', handleWindowResize)
+})
 </script>
 <style lang="less" scoped>
+.@{starter-prefix}-header-layout {
+  --wails-draggable: drag;
+}
+
+.window-controls {
+  --wails-draggable: no-drag;
+  display: inline-flex;
+  align-items: center;
+}
+
 .@{starter-prefix}-header {
   &-menu-fixed {
     position: fixed;
