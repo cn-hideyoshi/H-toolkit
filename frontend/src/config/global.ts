@@ -1,2 +1,2 @@
-export const prefix = 'tdesign-starter';
-export const TOKEN_NAME = 'tdesign-starter';
+export const prefix = 'h-toolkit';
+export const TOKEN_NAME = 'h-toolkit';
