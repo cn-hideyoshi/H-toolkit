@@ -1,6 +1,7 @@
 package main
 
 import (
+	"H-toolkit/backend/utils"
 	"embed"
 
 	"github.com/wailsapp/wails/v2"
@@ -28,6 +29,7 @@ func main() {
 		OnStartup:        app.startup,
 		Bind: []interface{}{
 			app,
+			&utils.Json{},
 		},
 	})
 

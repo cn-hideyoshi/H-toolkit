@@ -4,11 +4,11 @@ import uniq from 'lodash/uniq'
 // 自动导入modules文件夹下所有ts文件
 const modules = import.meta.glob('./modules/**/*.ts', { eager: true }) as Record<
   string,
-  { default: RouteRecordRaw | RouteRecordRaw[] }
+  { default: any[] }
 >
 
 // 路由暂存
-const routeModuleList: Array<RouteRecordRaw> = []
+const routeModuleList: Array<any> = []
 
 Object.keys(modules).forEach((key) => {
   const mod = modules[key].default || {}
@@ -19,10 +19,10 @@ Object.keys(modules).forEach((key) => {
 // 关于单层路由，meta 中设置 { single: true } 即可为单层路由，{ hidden: true } 即可在侧边栏隐藏该路由
 
 // 存放动态路由
-export const asyncRouterList: Array<RouteRecordRaw> = [...routeModuleList]
+export const asyncRouterList: Array<any> = [...routeModuleList]
 
 // 存放固定的路由
-const defaultRouterList: Array<RouteRecordRaw> = [
+const defaultRouterList: Array<any> = [
   {
     path: '/',
     redirect: '/dashboard/base',
@@ -46,7 +46,7 @@ export const getRoutesExpanded = () => {
     if (item.children && item.children.length > 0) {
       item.children
         .filter((child) => child.meta && child.meta.expanded)
-        .forEach((child: RouteRecordRaw) => {
+        .forEach((child: any) => {
           expandedRoutes.push(item.path)
           expandedRoutes.push(`${item.path}/${child.path}`)
         })
