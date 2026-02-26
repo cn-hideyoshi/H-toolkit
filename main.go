@@ -15,7 +15,7 @@ var assets embed.FS
 func main() {
 	// Create an instance of the app structure
 	app := NewApp()
-
+	utilsJson := utils.Json{}
 	// Create application with options
 	err := wails.Run(&options.App{
 		Title:     "H-toolkit",
@@ -29,7 +29,7 @@ func main() {
 		OnStartup:        app.startup,
 		Bind: []interface{}{
 			app,
-			&utils.Json{},
+			&utilsJson,
 		},
 	})
 
