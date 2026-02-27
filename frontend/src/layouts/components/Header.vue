@@ -18,7 +18,7 @@
       <template #operations>
         <div class="operations-container">
           <!-- 搜索框 -->
-          <search v-if="layout !== 'side'" :layout="layout" />
+          <!-- <search v-if="layout !== 'side'" :layout="layout" /> -->
 
           <t-tooltip placement="bottom" content="代码仓库">
             <t-button theme="default" shape="square" variant="text" @click="navToGitHub">
