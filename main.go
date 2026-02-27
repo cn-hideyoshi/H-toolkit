@@ -16,6 +16,7 @@ func main() {
 	// Create an instance of the app structure
 	app := NewApp()
 	utilsJson := utils.Json{}
+	utilsTimestamp := utils.Timestamp{}
 	// Create application with options
 	err := wails.Run(&options.App{
 		Title:     "H-toolkit",
@@ -30,6 +31,7 @@ func main() {
 		Bind: []interface{}{
 			app,
 			&utilsJson,
+			&utilsTimestamp,
 		},
 	})
 
