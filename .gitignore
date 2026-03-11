@@ -2,3 +2,6 @@
 .vscode
 build/bin
 frontend/pkg
+
+
+dev.sh
