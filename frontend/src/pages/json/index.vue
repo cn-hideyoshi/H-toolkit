@@ -2,6 +2,7 @@
   <div class="json-tool">
     <t-card title="JSON 工具">
       <div class="action-row">
+        <t-button variant="outline" @click="handleLoadDemo">加载 Demo</t-button>
         <t-button :loading="loading" @click="handleFormat">格式化</t-button>
         <t-button :loading="loading" @click="handleCompress">压缩</t-button>
         <t-button :loading="loading" @click="handleEscape">添加转义</t-button>
@@ -12,7 +13,7 @@
       </div>
 
       <t-row :gutter="[16, 16]">
-        <t-col :span="6">
+        <t-col :xs="12" :lg="6">
           <div class="panel-title">输入</div>
           <t-textarea
             v-model="inputText"
@@ -21,15 +22,33 @@
             placeholder="请输入 JSON 或文本"
           />
         </t-col>
-        <t-col :span="6">
-          <div class="panel-title">输出</div>
+        <t-col :xs="12" :lg="6">
+          <div class="panel-header">
+            <div class="panel-title">输出</div>
+            <t-radio-group v-model="outputViewMode" variant="default-filled">
+              <t-radio-button value="source">源码视图</t-radio-button>
+              <t-radio-button value="tree">树形视图</t-radio-button>
+            </t-radio-group>
+          </div>
+
           <t-textarea
+            v-if="outputViewMode === 'source'"
             v-model="outputText"
             class="editor"
             readonly
             :autosize="{ minRows: 18, maxRows: 28 }"
             placeholder="处理结果将显示在这里"
           />
+
+          <div v-else-if="treeStatus === 'empty'" class="tree-placeholder">
+            处理结果为空，暂时没有可展示的树形结构。
+          </div>
+
+          <div v-else-if="treeStatus === 'error'" class="tree-placeholder tree-placeholder-error">
+            当前输出不是合法 JSON，无法切换到树形视图。
+          </div>
+
+          <JsonTreeView v-else :data="parsedTreeData" />
         </t-col>
       </t-row>
     </t-card>
@@ -43,13 +62,46 @@ export default {
 </script>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import { MessagePlugin } from 'tdesign-vue-next';
 import { Compress, DecodeUnicode, EncodeUnicode, Escape, Format, Unescape } from '../../../wailsjs/go/utils/Json';
+import JsonTreeView from './components/JsonTreeView.vue';
+
+type JsonValue = null | boolean | number | string | JsonValue[] | { [key: string]: JsonValue };
 
 const inputText = ref('');
 const outputText = ref('');
 const loading = ref(false);
+const outputViewMode = ref<'source' | 'tree'>('source');
+const demoJson = `{
+  "app": "H-toolkit",
+  "version": "0.0.1",
+  "enabled": true,
+  "count": 3,
+  "meta": {
+    "owner": "hideyoshi",
+    "tags": ["json", "tree-view", "demo"],
+    "updatedAt": "2026-03-14T10:00:00+08:00"
+  },
+  "items": [
+    {
+      "id": 1,
+      "name": "Format JSON",
+      "status": "done"
+    },
+    {
+      "id": 2,
+      "name": "Tree View",
+      "status": "done"
+    },
+    {
+      "id": 3,
+      "name": "Source View",
+      "status": "done"
+    }
+  ],
+  "nullableField": null
+}`;
 
 const stripWrappingQuotes = (value: string): string => {
   if (value.length >= 2 && value.startsWith('"') && value.endsWith('"')) {
@@ -106,10 +158,38 @@ const handleDecodeUnicode = async () => {
   await runAction(() => DecodeUnicode(inputText.value));
 };
 
+const handleLoadDemo = () => {
+  inputText.value = demoJson;
+  outputText.value = demoJson;
+  outputViewMode.value = 'source';
+};
+
 const handleClear = () => {
   inputText.value = '';
   outputText.value = '';
 };
+
+const parsedOutput = computed<{ status: 'empty' } | { status: 'error' } | { status: 'success'; value: JsonValue }>(() => {
+  const content = outputText.value.trim();
+
+  if (!content) {
+    return { status: 'empty' };
+  }
+
+  try {
+    return {
+      status: 'success',
+      value: JSON.parse(content) as JsonValue,
+    };
+  } catch (error) {
+    return { status: 'error' };
+  }
+});
+
+const treeStatus = computed(() => parsedOutput.value.status);
+const parsedTreeData = computed<JsonValue | null>(() =>
+  parsedOutput.value.status === 'success' ? parsedOutput.value.value : null,
+);
 </script>
 
 <style scoped lang="less">
@@ -122,12 +202,36 @@ const handleClear = () => {
   }
 
   .panel-title {
-    margin-bottom: 8px;
     font-weight: 500;
+  }
+
+  .panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 8px;
   }
 
   .editor {
     width: 100%;
+  }
+
+  .tree-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 388px;
+    padding: 24px;
+    color: var(--td-text-color-secondary);
+    text-align: center;
+    border: 1px dashed var(--td-border-level-2-color);
+    border-radius: var(--td-radius-default);
+    background: var(--td-bg-color-container);
+  }
+
+  .tree-placeholder-error {
+    color: var(--td-error-color);
   }
 }
 </style>
