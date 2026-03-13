@@ -20,6 +20,8 @@ Develop with the Wails CLI:
 
 ```bash
 wails dev
+#webkit2_41
+wails dev -tags webkit2_41
 ```
 
 ## Build

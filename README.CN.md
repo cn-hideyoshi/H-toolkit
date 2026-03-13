@@ -20,6 +20,8 @@ wails命令行开发:
 
 ```bash
 wails dev
+# webkit2_41
+wails dev -tags webkit2_41
 ```
 
 ## 构建
