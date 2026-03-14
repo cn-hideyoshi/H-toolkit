@@ -102,9 +102,11 @@ const settingStore = useSettingStore();
 
 const autoCollapsed = () => {
   const isCompact = window.innerWidth <= MIN_POINT;
-  settingStore.updateConfig({
-    isSidebarCompact: isCompact,
-  });
+  if (isCompact) {
+    settingStore.updateConfig({
+      isSidebarCompact: true,
+    });
+  }
 };
 
 onMounted(() => {

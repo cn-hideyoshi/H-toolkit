@@ -9,7 +9,6 @@
           <t-button theme="default" shape="square" variant="text" @click="changeCollapsed">
             <t-icon class="collapsed-icon" name="view-list" />
           </t-button>
-          <search :layout="layout" />
         </div>
       </template>
       <template v-if="layout !== 'side'" #default>
@@ -17,9 +16,6 @@
       </template>
       <template #operations>
         <div class="operations-container">
-          <!-- 搜索框 -->
-          <!-- <search v-if="layout !== 'side'" :layout="layout" /> -->
-
           <t-tooltip placement="bottom" content="代码仓库">
             <t-button theme="default" shape="square" variant="text" @click="navToGitHub">
               <t-icon name="logo-github" />
@@ -58,7 +54,6 @@ import { prefix } from '@/config/global'
 import LogoFull from '@/assets/assets-logo-full.svg?component'
 import type { MenuRoute } from '@/types/interface'
 
-import Search from './Search.vue'
 import MenuContent from './MenuContent.vue'
 
 const props = defineProps({
