@@ -44,10 +44,10 @@
 </template>
 
 <script setup lang="ts">
-import { WindowIsMaximised, WindowMinimise, WindowToggleMaximise, Quit } from '../../../wailsjs/runtime/runtime'
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import type { PropType } from 'vue'
 import { useRouter } from 'vue-router'
+import { WindowIsMaximised, WindowMinimise, WindowToggleMaximise, Quit } from '@wailsapp/runtime'
 import { useSettingStore } from '@/store'
 import { getActive } from '@/router'
 import { prefix } from '@/config/global'
@@ -147,11 +147,11 @@ const handleToggleMaximise = async () => {
 }
 
 const handleWindowResize = () => {
-  void syncWindowMaximised()
+  syncWindowMaximised()
 }
 
 onMounted(() => {
-  void syncWindowMaximised()
+  syncWindowMaximised()
   window.addEventListener('resize', handleWindowResize)
 })
 

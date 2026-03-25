@@ -1,9 +1,11 @@
 snapshot*
 dist
+coverage
 lib
 es
 esm
 node_modules
+wailsjs
 src/_common
 static
 cypress

@@ -29,3 +29,11 @@ wails dev -tags webkit2_41
 ```bash
 wails build
 ```
+
+## Testing
+
+```bash
+go test ./...
+cd frontend && npm test
+cd frontend && npm run test:coverage
+```

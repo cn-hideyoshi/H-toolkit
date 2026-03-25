@@ -1,21 +1,22 @@
-import { ConfigEnv, UserConfig, loadEnv } from 'vite';
-import { viteMockServe } from 'vite-plugin-mock';
-import createVuePlugin from '@vitejs/plugin-vue';
-import vueJsx from '@vitejs/plugin-vue-jsx';
-import svgLoader from 'vite-svg-loader';
+import { ConfigEnv, UserConfig, loadEnv } from 'vite'
+import { viteMockServe } from 'vite-plugin-mock'
+import createVuePlugin from '@vitejs/plugin-vue'
+import vueJsx from '@vitejs/plugin-vue-jsx'
+import svgLoader from 'vite-svg-loader'
 
-import path from 'path';
+import path from 'path'
 
-const CWD = process.cwd();
+const CWD = process.cwd()
 
 // https://vitejs.dev/config/
 export default ({ mode }: ConfigEnv): UserConfig => {
-  const { VITE_BASE_URL } = loadEnv(mode, CWD);
+  const { VITE_BASE_URL } = loadEnv(mode, CWD)
   return {
     base: VITE_BASE_URL,
     resolve: {
       alias: {
         '@': path.resolve(__dirname, './src'),
+        '@wailsapp/runtime': path.resolve(__dirname, './wailsjs/runtime/runtime.js'),
       },
     },
 
@@ -47,5 +48,5 @@ export default ({ mode }: ConfigEnv): UserConfig => {
         '/api': 'http://127.0.0.1:3000/',
       },
     },
-  };
-};
+  }
+}

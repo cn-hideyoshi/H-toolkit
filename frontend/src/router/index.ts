@@ -1,11 +1,8 @@
-import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router'
+import { createRouter, createWebHashHistory } from 'vue-router'
 import uniq from 'lodash/uniq'
 
 // 自动导入modules文件夹下所有ts文件
-const modules = import.meta.glob('./modules/**/*.ts', { eager: true }) as Record<
-  string,
-  { default: any[] }
->
+const modules = import.meta.glob('./modules/**/*.ts', { eager: true }) as Record<string, { default: any[] }>
 
 // 路由暂存
 const routeModuleList: Array<any> = []
@@ -72,7 +69,7 @@ export const getActive = (maxLevel = 3): string => {
 const router = createRouter({
   history: createWebHashHistory(),
   routes: allRoutes,
-  scrollBehavior() {  
+  scrollBehavior() {
     return {
       el: '#app',
       top: 0,

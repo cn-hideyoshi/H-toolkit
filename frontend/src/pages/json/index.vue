@@ -48,7 +48,7 @@
             当前输出不是合法 JSON，无法切换到树形视图。
           </div>
 
-          <JsonTreeView v-else :data="parsedTreeData" />
+          <json-tree-view v-else :data="parsedTreeData" />
         </t-col>
       </t-row>
     </t-card>
@@ -58,21 +58,21 @@
 <script lang="ts">
 export default {
   name: 'JsonIndex',
-};
+}
 </script>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue';
-import { MessagePlugin } from 'tdesign-vue-next';
-import { Compress, DecodeUnicode, EncodeUnicode, Escape, Format, Unescape } from '../../../wailsjs/go/utils/Json';
-import JsonTreeView from './components/JsonTreeView.vue';
+import { computed, ref } from 'vue'
+import { MessagePlugin } from 'tdesign-vue-next'
+import { Compress, DecodeUnicode, EncodeUnicode, Escape, Format, Unescape } from '../../../wailsjs/go/utils/Json'
+import JsonTreeView from './components/JsonTreeView.vue'
 
-type JsonValue = null | boolean | number | string | JsonValue[] | { [key: string]: JsonValue };
+type JsonValue = null | boolean | number | string | JsonValue[] | { [key: string]: JsonValue }
 
-const inputText = ref('');
-const outputText = ref('');
-const loading = ref(false);
-const outputViewMode = ref<'source' | 'tree'>('source');
+const inputText = ref('')
+const outputText = ref('')
+const loading = ref(false)
+const outputViewMode = ref<'source' | 'tree'>('source')
 const demoJson = `{
   "app": "H-toolkit",
   "version": "0.0.1",
@@ -101,95 +101,97 @@ const demoJson = `{
     }
   ],
   "nullableField": null
-}`;
+}`
 
 const stripWrappingQuotes = (value: string): string => {
   if (value.length >= 2 && value.startsWith('"') && value.endsWith('"')) {
-    return value.slice(1, -1);
+    return value.slice(1, -1)
   }
-  return value;
-};
+  return value
+}
 
 const ensureWrappedQuotes = (value: string): string => {
   if (value.length >= 2 && value.startsWith('"') && value.endsWith('"')) {
-    return value;
+    return value
   }
-  return `"${value}"`;
-};
+  return `"${value}"`
+}
 
 const handleError = (error: unknown) => {
-  const message = error instanceof Error ? error.message : String(error);
-  MessagePlugin.error(message || '处理失败');
-};
+  const message = error instanceof Error ? error.message : String(error)
+  MessagePlugin.error(message || '处理失败')
+}
 
 const runAction = async (action: () => Promise<string>) => {
-  if (loading.value) return;
-  loading.value = true;
+  if (loading.value) return
+  loading.value = true
   try {
-    outputText.value = await action();
+    outputText.value = await action()
   } catch (error) {
-    handleError(error);
+    handleError(error)
   } finally {
-    loading.value = false;
+    loading.value = false
   }
-};
+}
 
 const handleFormat = async () => {
-  await runAction(() => Format(inputText.value));
-};
+  await runAction(() => Format(inputText.value))
+}
 
 const handleCompress = async () => {
-  await runAction(() => Compress(inputText.value));
-};
+  await runAction(() => Compress(inputText.value))
+}
 
 const handleEscape = async () => {
-  await runAction(async () => stripWrappingQuotes(await Escape(inputText.value)));
-};
+  await runAction(async () => stripWrappingQuotes(await Escape(inputText.value)))
+}
 
 const handleUnescape = async () => {
-  await runAction(() => Unescape(ensureWrappedQuotes(inputText.value)));
-};
+  await runAction(() => Unescape(ensureWrappedQuotes(inputText.value)))
+}
 
 const handleEncodeUnicode = async () => {
-  await runAction(async () => stripWrappingQuotes(await EncodeUnicode(inputText.value)));
-};
+  await runAction(async () => stripWrappingQuotes(await EncodeUnicode(inputText.value)))
+}
 
 const handleDecodeUnicode = async () => {
-  await runAction(() => DecodeUnicode(inputText.value));
-};
+  await runAction(() => DecodeUnicode(inputText.value))
+}
 
 const handleLoadDemo = () => {
-  inputText.value = demoJson;
-  outputText.value = demoJson;
-  outputViewMode.value = 'source';
-};
+  inputText.value = demoJson
+  outputText.value = demoJson
+  outputViewMode.value = 'source'
+}
 
 const handleClear = () => {
-  inputText.value = '';
-  outputText.value = '';
-};
+  inputText.value = ''
+  outputText.value = ''
+}
 
-const parsedOutput = computed<{ status: 'empty' } | { status: 'error' } | { status: 'success'; value: JsonValue }>(() => {
-  const content = outputText.value.trim();
+const parsedOutput = computed<{ status: 'empty' } | { status: 'error' } | { status: 'success'; value: JsonValue }>(
+  () => {
+    const content = outputText.value.trim()
 
-  if (!content) {
-    return { status: 'empty' };
-  }
+    if (!content) {
+      return { status: 'empty' }
+    }
 
-  try {
-    return {
-      status: 'success',
-      value: JSON.parse(content) as JsonValue,
-    };
-  } catch (error) {
-    return { status: 'error' };
-  }
-});
+    try {
+      return {
+        status: 'success',
+        value: JSON.parse(content) as JsonValue,
+      }
+    } catch (error) {
+      return { status: 'error' }
+    }
+  },
+)
 
-const treeStatus = computed(() => parsedOutput.value.status);
+const treeStatus = computed(() => parsedOutput.value.status)
 const parsedTreeData = computed<JsonValue | null>(() =>
   parsedOutput.value.status === 'success' ? parsedOutput.value.value : null,
-);
+)
 </script>
 
 <style scoped lang="less">

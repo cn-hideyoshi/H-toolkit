@@ -1,6 +1,6 @@
-import { defineStore } from 'pinia';
-import { asyncRouterList } from '@/router';
-import { store } from '@/store';
+import { defineStore } from 'pinia'
+import { asyncRouterList } from '@/router'
+import { store } from '@/store'
 
 export const usePermissionStore = defineStore('permission', {
   state: () => ({
@@ -10,15 +10,15 @@ export const usePermissionStore = defineStore('permission', {
   }),
   actions: {
     async initRoutes(_roles: Array<unknown>) {
-      this.routers = asyncRouterList;
-      this.removeRoutes = [];
+      this.routers = asyncRouterList
+      this.removeRoutes = []
     },
     async restore() {
-      this.removeRoutes = [];
+      this.removeRoutes = []
     },
   },
-});
+})
 
 export function getPermissionStore() {
-  return usePermissionStore(store);
+  return usePermissionStore(store)
 }

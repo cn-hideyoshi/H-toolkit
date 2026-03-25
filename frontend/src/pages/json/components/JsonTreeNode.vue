@@ -25,32 +25,32 @@
 <script lang="ts">
 export default {
   name: 'JsonTreeNode',
-};
+}
 </script>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { computed, ref } from 'vue'
 
-type JsonValue = null | boolean | number | string | JsonValue[] | { [key: string]: JsonValue };
+type JsonValue = null | boolean | number | string | JsonValue[] | { [key: string]: JsonValue }
 
 const props = withDefaults(
   defineProps<{
-    label?: string;
-    value: JsonValue;
-    level?: number;
+    label?: string
+    value: JsonValue
+    level?: number
   }>(),
   {
     label: '',
     level: 0,
   },
-);
+)
 
-const isContainer = computed(() => props.value !== null && typeof props.value === 'object');
-const expanded = ref(props.level < 1);
+const isContainer = computed(() => props.value !== null && typeof props.value === 'object')
+const expanded = ref(props.level < 1)
 
 const childNodes = computed(() => {
   if (!isContainer.value) {
-    return [];
+    return []
   }
 
   if (Array.isArray(props.value)) {
@@ -58,59 +58,59 @@ const childNodes = computed(() => {
       key: `${index}`,
       label: `[${index}]`,
       value: item,
-    }));
+    }))
   }
 
   return Object.entries(props.value).map(([key, value]) => ({
     key,
     label: key,
     value,
-  }));
-});
+  }))
+})
 
 const valueLabel = computed(() => {
   if (Array.isArray(props.value)) {
-    return `Array(${props.value.length})`;
+    return `Array(${props.value.length})`
   }
 
   if (props.value === null) {
-    return 'null';
+    return 'null'
   }
 
   if (typeof props.value === 'object') {
-    return `Object{${Object.keys(props.value).length}}`;
+    return `Object{${Object.keys(props.value).length}}`
   }
 
   if (typeof props.value === 'string') {
-    return `"${props.value}"`;
+    return `"${props.value}"`
   }
 
-  return String(props.value);
-});
+  return String(props.value)
+})
 
 const valueClass = computed(() => {
   if (Array.isArray(props.value)) {
-    return 'value-tag value-array';
+    return 'value-tag value-array'
   }
 
   if (props.value === null) {
-    return 'value-tag value-null';
+    return 'value-tag value-null'
   }
 
   if (typeof props.value === 'object') {
-    return 'value-tag value-object';
+    return 'value-tag value-object'
   }
 
   if (typeof props.value === 'string') {
-    return 'value-tag value-string';
+    return 'value-tag value-string'
   }
 
   if (typeof props.value === 'number') {
-    return 'value-tag value-number';
+    return 'value-tag value-number'
   }
 
-  return 'value-tag value-boolean';
-});
+  return 'value-tag value-boolean'
+})
 </script>
 
 <style scoped lang="less">

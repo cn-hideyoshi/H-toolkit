@@ -1,23 +1,23 @@
 <template>
   <div class="json-tree-view">
-    <JsonTreeNode label="root" :value="data" />
+    <json-tree-node label="root" :value="data" />
   </div>
 </template>
 
 <script lang="ts">
 export default {
   name: 'JsonTreeView',
-};
+}
 </script>
 
 <script setup lang="ts">
-import JsonTreeNode from './JsonTreeNode.vue';
+import JsonTreeNode from './JsonTreeNode.vue'
 
-type JsonValue = null | boolean | number | string | JsonValue[] | { [key: string]: JsonValue };
+type JsonValue = null | boolean | number | string | JsonValue[] | { [key: string]: JsonValue }
 
 defineProps<{
-  data: JsonValue;
-}>();
+  data: JsonValue
+}>()
 </script>
 
 <style scoped lang="less">

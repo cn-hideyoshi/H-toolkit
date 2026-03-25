@@ -15,13 +15,17 @@
       "dom"
     ],
     "types": [
-      "vite/client"
+      "vite/client",
+      "vitest/globals"
     ],
     "noEmit": true,
     "baseUrl": "./",
     "paths": {
       "@/*": [
         "src/*"
+      ],
+      "@wailsapp/runtime": [
+        "wailsjs/runtime/runtime"
       ]
     }
   },

@@ -63,12 +63,12 @@
 <script lang="ts">
 export default {
   name: 'TimestampIndex',
-};
+}
 </script>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
-import { MessagePlugin } from 'tdesign-vue-next';
+import { onMounted, ref } from 'vue'
+import { MessagePlugin } from 'tdesign-vue-next'
 import {
   DateTimeToMilliseconds,
   DateTimeToSeconds,
@@ -76,81 +76,81 @@ import {
   NowMilliseconds,
   NowSeconds,
   SecondsToDateTime,
-} from '../../../wailsjs/go/utils/Timestamp';
+} from '../../../wailsjs/go/utils/Timestamp'
 
-const loading = ref(false);
+const loading = ref(false)
 
-const nowSeconds = ref('');
-const nowMilliseconds = ref('');
+const nowSeconds = ref('')
+const nowMilliseconds = ref('')
 
-const timestampInput = ref('');
-const timestampOutput = ref('');
+const timestampInput = ref('')
+const timestampOutput = ref('')
 
-const dateTimeInput = ref('');
-const dateTimeOutput = ref('');
+const dateTimeInput = ref('')
+const dateTimeOutput = ref('')
 
 const handleError = (error: unknown) => {
-  const message = error instanceof Error ? error.message : String(error);
-  MessagePlugin.error(message || '处理失败');
-};
+  const message = error instanceof Error ? error.message : String(error)
+  MessagePlugin.error(message || '处理失败')
+}
 
 const runAction = async (action: () => Promise<void>) => {
-  if (loading.value) return;
-  loading.value = true;
+  if (loading.value) return
+  loading.value = true
   try {
-    await action();
+    await action()
   } catch (error) {
-    handleError(error);
+    handleError(error)
   } finally {
-    loading.value = false;
+    loading.value = false
   }
-};
+}
 
 const handleRefreshNow = async () => {
   await runAction(async () => {
-    const [seconds, milliseconds] = await Promise.all([NowSeconds(), NowMilliseconds()]);
-    nowSeconds.value = seconds;
-    nowMilliseconds.value = milliseconds;
-  });
-};
+    const [seconds, milliseconds] = await Promise.all([NowSeconds(), NowMilliseconds()])
+    nowSeconds.value = seconds
+    nowMilliseconds.value = milliseconds
+  })
+}
 
 const handleSecondsToDateTime = async () => {
   await runAction(async () => {
-    timestampOutput.value = await SecondsToDateTime(timestampInput.value);
-  });
-};
+    timestampOutput.value = await SecondsToDateTime(timestampInput.value)
+  })
+}
 
 const handleMillisecondsToDateTime = async () => {
   await runAction(async () => {
-    timestampOutput.value = await MillisecondsToDateTime(timestampInput.value);
-  });
-};
+    timestampOutput.value = await MillisecondsToDateTime(timestampInput.value)
+  })
+}
 
 const handleDateTimeToSeconds = async () => {
   await runAction(async () => {
-    dateTimeOutput.value = await DateTimeToSeconds(dateTimeInput.value);
-  });
-};
+    dateTimeOutput.value = await DateTimeToSeconds(dateTimeInput.value)
+  })
+}
 
 const handleDateTimeToMilliseconds = async () => {
   await runAction(async () => {
-    dateTimeOutput.value = await DateTimeToMilliseconds(dateTimeInput.value);
-  });
-};
+    dateTimeOutput.value = await DateTimeToMilliseconds(dateTimeInput.value)
+  })
+}
 
 const handleClearTimestampPanel = () => {
-  timestampInput.value = '';
-  timestampOutput.value = '';
-};
+  timestampInput.value = ''
+  timestampOutput.value = ''
+}
 
 const handleClearDateTimePanel = () => {
-  dateTimeInput.value = '';
-  dateTimeOutput.value = '';
-};
+  dateTimeInput.value = ''
+  dateTimeOutput.value = ''
+}
 
 onMounted(() => {
-  void handleRefreshNow();
-});
+  handleRefreshNow()
+})
 </script>
 
 <style scoped lang="less">
