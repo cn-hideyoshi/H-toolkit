@@ -20,7 +20,7 @@ Develop with the Wails CLI:
 
 ```bash
 wails dev
-#webkit2_41
+# Linux only (for distros using libwebkit2gtk-4.1, e.g. Ubuntu 24.04+)
 wails dev -tags webkit2_41
 ```
 
@@ -29,6 +29,8 @@ wails dev -tags webkit2_41
 ```bash
 wails build
 ```
+
+Windows uses WebView2 and does not need the `webkit2_41` tag.
 
 ## Testing
 

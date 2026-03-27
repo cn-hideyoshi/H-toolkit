@@ -20,7 +20,7 @@ wails命令行开发:
 
 ```bash
 wails dev
-# webkit2_41
+# 仅 Linux 需要（例如 Ubuntu 24.04+ 使用 libwebkit2gtk-4.1）
 wails dev -tags webkit2_41
 ```
 
@@ -30,5 +30,6 @@ wails dev -tags webkit2_41
 wails build
 ```
 
+Windows 使用的是 WebView2，不需要 `webkit2_41` 这个 tag。
 
 
