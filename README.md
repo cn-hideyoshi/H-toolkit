@@ -7,6 +7,7 @@ A multiplatform desktop toolkit built with Wails.
 
 ## Features
 - **JSON Tool:** Supports JSON formatting, compression, escaping, and adding escape characters.
+- **Text / Encoding Tool:** Supports Base64 encode/decode, URL encode/decode, and UUID v4 generation plus normalization.
 - **Timestamp Tool:** Supports getting the current timestamp and converting between timestamps and date-time.
 
 ## Tech Stack

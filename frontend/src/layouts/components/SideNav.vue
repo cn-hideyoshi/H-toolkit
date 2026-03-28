@@ -8,7 +8,7 @@
       </template>
       <menu-content :nav-data="menu" />
       <template #operations>
-        <span class="version-container"> {{ !collapsed ? 'h-toolkit' : '' }} {{ pgk.version }} </span>
+        <span class="version-container"> {{ !collapsed ? 'H-toolkit' : '' }} {{ pgk.version }} </span>
       </template>
     </t-menu>
     <div :class="`${prefix}-side-nav-placeholder${collapsed ? '-hidden' : ''}`"></div>
